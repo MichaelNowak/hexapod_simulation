@@ -64,8 +64,11 @@ def plots(eul_time, eul_x, eul_b, sci_time, sci_x, sci_b, gain):
     start = 0
     stop = -1
 
-    plt.figure(figsize=(20,28), dpi=50)
-    grid_size = (10, 4)
+    #plt.figure(figsize=(20,28), dpi=50)
+    #grid_size = (10, 4)
+
+    plt.figure(figsize=(12,8), dpi=80)
+    grid_size = (2,4)
 
     subplot(grid_size, (0, 0), 1, 2, '$x$', '$b$', eul_x[k][start:stop], eul_b[j][start:stop], 'eul ' + str(k))
     subplot(grid_size, (0, 1), 1, 2, '$x$', '$b$', sci_x[k][start:stop], sci_b[j][start:stop], 'sci ' + str(k))
@@ -76,25 +79,37 @@ def plots(eul_time, eul_x, eul_b, sci_time, sci_x, sci_b, gain):
     subplot(grid_size, (0, 2), 2, 1, '$t$', '$y$', eul_time[start:stop], eul_y[start:stop], 'eul')
     subplot(grid_size, (1, 2), 2, 1, '$t$', '$y$', sci_time[start:stop], sci_y[start:stop], 'sci')
 
-    subplot(grid_size, (2, 0), 2, 1, '$t$', '$x$', eul_time[start:stop], eul_x[k][start:stop], 'eul')
-    subplot(grid_size, (3, 0), 2, 1, '$t$', '$x$', sci_time[start:stop], sci_x[k][start:stop], 'sci')
+    plt.subplots_adjust(hspace=0.7, wspace=0.4)
+    #plt.close()
 
-    subplot(grid_size, (2, 2), 2, 1, '$t$', '$b$', eul_time[start:stop], eul_b[k][start:stop], 'eul')
-    subplot(grid_size, (3, 2), 2, 1, '$t$', '$b$', sci_time[start:stop], sci_b[k][start:stop], 'sci')
+    plt.figure(figsize=(12,8), dpi=80)
+    grid_size = (4, 4)
 
-    start = 0
-    stop = -1
+    subplot(grid_size, (0, 0), 2, 1, '$t$', '$x$', eul_time[start:stop], eul_x[k][start:stop], 'eul')
+    subplot(grid_size, (1, 0), 2, 1, '$t$', '$x$', sci_time[start:stop], sci_x[k][start:stop], 'sci')
 
-    subplot(grid_size, (4, 0), 1, 2, '$x$', '$y$', eul_x[k][start:stop], eul_y[start:stop], 'eul')
-    subplot(grid_size, (4, 1), 1, 2, '$x$', '$y$', sci_x[k][start:stop], sci_y[start:stop], 'sci')
-
-    subplot(grid_size, (4, 2), 1, 2, '$b$', '$y$', eul_b[k][start:stop], eul_y[start:stop], 'eul')
-    subplot(grid_size, (4, 3), 1, 2, '$b$', '$y$', sci_b[k][start:stop], sci_y[start:stop], 'sci')
+    subplot(grid_size, (0, 2), 2, 1, '$t$', '$b$', eul_time[start:stop], eul_b[k][start:stop], 'eul')
+    subplot(grid_size, (1, 2), 2, 1, '$t$', '$b$', sci_time[start:stop], sci_b[k][start:stop], 'sci')
 
     start = 0
     stop = -1
 
-    ax13 = plt.subplot2grid(grid_size, (6, 0), colspan=4, rowspan=1)
+    subplot(grid_size, (2, 0), 1, 2, '$x$', '$y$', eul_x[k][start:stop], eul_y[start:stop], 'eul')
+    subplot(grid_size, (2, 1), 1, 2, '$x$', '$y$', sci_x[k][start:stop], sci_y[start:stop], 'sci')
+
+    subplot(grid_size, (2, 2), 1, 2, '$b$', '$y$', eul_b[k][start:stop], eul_y[start:stop], 'eul')
+    subplot(grid_size, (2, 3), 1, 2, '$b$', '$y$', sci_b[k][start:stop], sci_y[start:stop], 'sci')
+
+    plt.subplots_adjust(hspace=0.7, wspace=0.4)
+    #plt.close()
+
+    plt.figure(figsize=(12,8), dpi=80)
+    grid_size = (4, 4)
+
+    start = 0
+    stop = -1
+
+    ax13 = plt.subplot2grid(grid_size, (0, 0), colspan=4, rowspan=1)
     ax13.plot(eul_time[start:stop], eul_x[k][start:stop], label='eul:x')
     ax13.plot(eul_time[start:stop], eul_b[k][start:stop], label='b')
     ax13.plot(eul_time[start:stop], eul_y[start:stop], label='y')
@@ -102,13 +117,14 @@ def plots(eul_time, eul_x, eul_b, sci_time, sci_x, sci_b, gain):
     ax13.set_xlabel('$t$')
     ax13.set_ylabel('$x,b,y$')
 
-    ax14 = plt.subplot2grid(grid_size, (7, 0), colspan=4, rowspan=1)
+    ax14 = plt.subplot2grid(grid_size, (1, 0), colspan=4, rowspan=1)
     ax14.plot(sci_time[start:stop], sci_x[k][start:stop], label='sci:x')
     ax14.plot(sci_time[start:stop], sci_b[k][start:stop], label='b')
     ax14.plot(sci_time[start:stop], sci_y[start:stop], label='y')
     ax14.legend()
     ax14.set_xlabel('$t$')
     ax14.set_ylabel('$x,b,y$')
+
 
     start = 0
     stop = -1  # int(1 / 4 * len(eul_time))
@@ -122,8 +138,8 @@ def plots(eul_time, eul_x, eul_b, sci_time, sci_x, sci_b, gain):
     evenly_spaced_interval = np.linspace(0, 1, len(eul_x))
     colors = [mpl.cm.rainbow(x) for x in evenly_spaced_interval]
 
-    ax15 = plt.subplot2grid(grid_size, (8, 0), colspan=4, rowspan=1)
-    ax16 = plt.subplot2grid(grid_size, (9, 0), colspan=4, rowspan=1)
+    ax15 = plt.subplot2grid(grid_size, (2, 0), colspan=4, rowspan=1)
+    ax16 = plt.subplot2grid(grid_size, (3, 0), colspan=4, rowspan=1)
     # for i in range(len(eul_x)):
     for i, color in enumerate(colors):
         ax15.plot(t_eul, y_eul(i)[start:stop], ls='-', c=color, label='$y_' + str(i + 1) + '$')
@@ -136,6 +152,8 @@ def plots(eul_time, eul_x, eul_b, sci_time, sci_x, sci_b, gain):
     ax16.legend()
     ax16.set_xlabel('$t$')
     ax16.set_ylabel('$y$')
+
+    #plt.close()
 
     # start = 0
     # stop = int(1 / 4 * len(eul_time))
@@ -168,16 +186,17 @@ def plots(eul_time, eul_x, eul_b, sci_time, sci_x, sci_b, gain):
     # ax18.set_xlabel('$t$')
     # ax18.set_ylabel('$b-x$')
 
-    left = 0.125  # the left side of the subplots of the figure
-    right = 0.9  # the right side of the subplots of the figure
-    bottom = 0.2  # the bottom of the subplots of the figure
-    top = 0.9  # the top of the subplots of the figure
-    wspace = 0.3  # the amount of width reserved for space between subplots,
-    # expressed as a fraction of the average axis width
-    hspace = 0.5  # the amount of height reserved for space between subplots,
-    # expressed as a fraction of the average axis height
-
-    plt.subplots_adjust(left=left, bottom=bottom, right=right, top=top, wspace=wspace, hspace=hspace)
+    # left = 0.125  # the left side of the subplots of the figure
+    # right = 0.9  # the right side of the subplots of the figure
+    # bottom = 0.2  # the bottom of the subplots of the figure
+    # top = 0.9  # the top of the subplots of the figure
+    # wspace = 0.3  # the amount of width reserved for space between subplots,
+    # # expressed as a fraction of the average axis width
+    # hspace = 0.5  # the amount of height reserved for space between subplots,
+    # # expressed as a fraction of the average axis height
+    #
+    # plt.subplots_adjust(left=left, bottom=bottom, right=right, top=top, wspace=wspace, hspace=hspace)
+    plt.subplots_adjust(hspace=0.7, wspace=0.4)
 
     plt.show()
     plt.close()
