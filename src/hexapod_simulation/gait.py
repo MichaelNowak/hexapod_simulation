@@ -11,15 +11,105 @@ def wave(dim):
 
 
 def test_gait():
-    dy = 0.1
-    gait_matrix = np.array(
-        [[1.0, dy, -1.0 - dy, 1.0, dy, -1.0 - dy],
-         [-1.0 - dy, 1.0, dy, -1.0 - dy, 1.0, dy],
-         [dy, -1.0 - dy, 1.0, dy, -1.0 - dy, 1.0],
-         [1.0, dy, -1.0 - dy, 1.0, dy, -1.0 - dy],
-         [-1.0 - dy, 1.0, dy, -1.0 - dy, 1.0, dy],
-         [dy, -1.0 - dy, 1.0, dy, -1.0 - dy, 1.0]]
-    )
+    #dy = 0.1
+    # gait_matrix = np.array(
+    #     [[1.0, dy, -1.0 - dy, 1.0, dy, -1.0 - dy],
+    #      [-1.0 - dy, 1.0, dy, -1.0 - dy, 1.0, dy],
+    #      [dy, -1.0 - dy, 1.0, dy, -1.0 - dy, 1.0],
+    #      [1.0, dy, -1.0 - dy, 1.0, dy, -1.0 - dy],
+    #      [-1.0 - dy, 1.0, dy, -1.0 - dy, 1.0, dy],
+    #      [dy, -1.0 - dy, 1.0, dy, -1.0 - dy, 1.0]]
+    # )
+    # gait_matrix = np.array([
+    #     [0, 1],
+    #     [1, 0]
+    # ])
+    # gait_matrix = np.array([
+    #     [0, 1, -1],
+    #     [1, 0, -1],
+    #     [0, -1, 1]
+    # ])
+    def j(x):   # -1 -> 0
+        return -6 * x + 2
+
+    def k(x):   # 1 -> -1
+        return 12 * x - 5
+
+    def l(x):   # 1 -> 0.6
+        return 1.2 * x + 0.4
+
+    def m(x):   # 1 -> 0.2
+        return 2.4 * x - 0.2
+
+    def n(x):   # 1 -> -0.2
+        return 3.6 * x - 0.8
+
+    def o(x):   # 1 -> -0.6
+        return 4.8 * x - 1.4
+
+    def p(x):   # 1 -> -1
+        return -j(x)
+
+    def r(x):   # 0 -> 1
+        return -6 * x + 2
+
+    def s(x):   # 0 -> 0.6
+        return -3.5 + 1.2
+
+    def s(x):   # 0 -> 0.2
+        return -1.2 + 0.4
+
+
+    y = 0.18
+
+    # tetrapod / wave
+    # gait_matrix = np.array([
+    #     [1, s(y), ]
+    # ])
+
+    # # tripod / tetrapod
+    # gait_matrix = np.array([
+    #     [1, j(y), k(y), -k(y), k(y), j(y)],
+    #     [-1, 1, j(y), k(y), j(y), 1],
+    #     [-j(y), -1, 1, j(y), 1, -1],
+    #     [l(y), -j(y), -1, 1, -1, -j(y)],
+    #     [m(y), -1, 1, j(y), 1, -1],
+    #     [-1, 1, j(y), k(y), j(y), 1]
+    # ])
+
+    ##tripod / wave
+    gait_matrix = np.array([
+        [1, -o(y), m(y), -m(y), o(y), -1],
+        [-1, 1, -o(y), m(y), -m(y), o(y)],
+        [o(y), -1, 1, -o(y), m(y), -m(y)],
+        [-m(y), o(y), -1, 1, -o(y), m(y)],
+        [m(y), -m(y), o(y), -1, 1, -o(y)],
+        [-o(y), m(y), -m(y), o(y), -1, 1]
+    ])
+
+    gait_matrix = np.array([
+        [1, 0.1],
+        [0.1, 1]
+    ])
+
+    gait_matrix = np.array([
+        [0, 1, -1],
+        [1, 0, -1],
+        [0, -1, 1]
+    ])
+
+    # gait_matrix = np.array([
+    #     [1, 0, -1],
+    #     [0, 1, -1],
+    #     [0, -1, 1]
+    # ])
+
+    gait_matrix = np.array([
+        [1, 1, -1],
+        [1, 1, -1],
+        [-1, -1, 1]
+    ])
+
     return gait_matrix
 
 

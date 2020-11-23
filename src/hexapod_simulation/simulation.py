@@ -8,7 +8,7 @@ import scipy.integrate
 from gait import gait, test_gait
 from model import dynamical_system_nd, \
     solve_euler_hexapod_nd_sensor, solve_ivp_euler_nd
-from plot import plots, print_params, save_as_hexy_file
+from plot import plots, print_params#, save_as_hexy_file
 
 ospath = os.path.dirname(__file__)
 
@@ -95,8 +95,10 @@ class Sim:
 
         self.eul_y_h = None
 
-        self.eul_sensor_act_vertical = None
-        self.eul_sensor_act_horizontal = None
+        self.eul_sensor_vertical = None
+        self.eul_sensor_horizontal = None
+
+        self.eul_b_sens = None
 
         self.sci_x = None
         self.sci_b = None
@@ -105,7 +107,7 @@ class Sim:
     def init_vals(self, id, ref):
         num_ones = np.count_nonzero(self.gait_matrix[0] == 1)
         gm_cp = np.transpose(deepcopy(self.gait_matrix))[0]
-        tau = 0.1
+        tau = self.g * num_ones * self.tau_b / (1 - self.y_bar) * 1 / 2
         one_arr = np.where(gm_cp == 1, 1, 0)
         epsilon = - (one_arr - self.y_bar) / self.tau_b * tau
 
@@ -161,8 +163,8 @@ class Sim:
                                             self.tau_b, self.gait_matrix, self.tau_sens, self.y_h_max,
                                             self.transpose_time, self.sensor_time, self.vsensor, self.hsensor,
                                             self.noise, self.constant_time_delay)
-        split_arr = np.split(sol[:-1], 5)
-        return split_arr, sol[-1]
+        #split_arr = np.split(sol, 7)
+        return sol
 
     def print(self):
         print_params(self.dim, self.sets, self.a, self.y_bar, self.tau_x, self.tau_b, self.theta, self.gamma,
@@ -207,7 +209,7 @@ class Sim:
         ics = Sim.init_vals(self, id, ref)
         raw = Sim.sol_euler_raw(self, ics)
         if ics_save:
-            Sim.save_ics(self, raw[0], id, ref)
+            Sim.save_ics(self, raw, id, ref)
         return raw
 
     def solve(self, print_params=True, plot=True, save=True, ics_save=True):
@@ -218,25 +220,29 @@ class Sim:
 
         # Simulation results as class objects containing all values
         # Euler method
-        self.eul_dt = eul[1]    # time step
-        self.eul_x = eul[0][0]  # membrane potential
-        self.eul_b = eul[0][1]  # neural bias
-        self.eul_y = 1 / (1 + np.exp(self.a * (self.eul_b - self.eul_x)))   # neural activation
+        #self.eul_dt = eul[7]  # time step
 
-        self.eul_y_h = eul[0][2]    # horizontal neural activation
+        self.eul_x = eul[0]  # membrane potential
+        self.eul_b = eul[1]  # neural bias
+        self.eul_y = eul[2]
+        self.eul_y_h = eul[3]  # horizontal neural activation
 
-        self.eul_sensor_act_vertical = eul[0][3]    # simulated vertical sensor values
-        self.eul_sensor_act_horizontal = eul[0][4]  # simulated horizontal sensor values
+        self.eul_sensor_vertical = eul[4]  # simulated vertical sensor values
+        self.eul_sensor_horizontal = eul[5]  # simulated horizontal sensor values
+
+        self.eul_b_sens = eul[6]
 
         # Scipy Runge-Kutta-4 method
-        self.sci_x = sci[0]     # membrane potential
-        self.sci_b = sci[1]     # neural bias
-        self.sci_y = 1 / (1 + np.exp(self.a * (self.sci_b - self.sci_x)))   # neural activation
+        self.sci_x = sci[0]  # membrane potential
+        self.sci_b = sci[1]  # neural bias
+        self.sci_y = 1 / (1 + np.exp(self.a * (self.sci_b - self.sci_x)))  # neural activation
 
-        if print_params:    # print parameters
+        if print_params:  # print parameters
             Sim.print(self)
-        if plot:    # plot results
-            plots(self.eul_t, self.eul_x, self.eul_b, self.sci_t, self.sci_x, self.sci_b, self.a)
-        if save:    # save results in file for analysis
+        if plot:  # plot results
+            plots(self.dim, self.sets, self.g, self.eul_t, self.eul_x, self.eul_b, self.eul_y_h, self.sci_t, self.sci_x,
+                  self.sci_b, self.a)
+        if save:  # save results in file for analysis
             # save_as_hexy_file(self.sci_t, self.sci_x, self.sci_b, self.a)
-            save_as_hexy_file(self.eul_dt, self.eul_x, self.eul_b, self.a)
+            #save_as_hexy_file(self.eul_dt, self.eul_x, self.eul_b, self.a)
+            pass

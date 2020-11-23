@@ -97,7 +97,7 @@ for i in range(loops):
     # solve
     x = s.solve(print_params=True,
                 plot=True,
-                save=True)
+                save=False)
 
 example_plots = False
 if example_plots:

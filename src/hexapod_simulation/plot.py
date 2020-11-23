@@ -48,7 +48,7 @@ def y(a, b, x):
     return 1 / (1 + np.exp(a * (b - x)))
 
 
-def plots(eul_time, eul_x, eul_b, sci_time, sci_x, sci_b, gain):
+def plots(dim, sets, g, eul_time, eul_x, eul_b, eul_y_h, sci_time, sci_x, sci_b, gain):
     def y_eul(k):
         return y(gain, eul_b[k], eul_x[k])
 
@@ -102,6 +102,27 @@ def plots(eul_time, eul_x, eul_b, sci_time, sci_x, sci_b, gain):
 
     plt.subplots_adjust(hspace=0.7, wspace=0.4)
     #plt.close()
+
+    plt.figure(figsize=(12, 3), dpi=80)
+    grid_size = (1, 1)
+    ax30 = plt.subplot2grid(grid_size, (0, 0), colspan=4, rowspan=1)
+    ax30.plot(eul_time[start:stop], eul_b[k][start:stop], label='$b$')
+    ax30.plot(eul_time[start:stop], dim / sets * g * eul_y_h[k][start:stop], label='$Y$')
+    ax30.legend()
+    ax30.set_xlabel('$t$')
+    ax30.set_ylabel('$b,Y$')
+
+    start = 0
+    stop = 250
+
+    plt.figure(figsize=(12, 3), dpi=80)
+    grid_size = (1, 1)
+    ax31 = plt.subplot2grid(grid_size, (0, 0), colspan=4, rowspan=1)
+    ax31.plot(eul_time[start:stop], eul_y[start:stop], label='$y$')
+    ax31.plot(eul_time[start:stop], eul_y_h[k][start:stop], label='$Y$')
+    ax31.legend()
+    ax31.set_xlabel('$t$')
+    ax31.set_ylabel('$y,Y$')
 
     plt.figure(figsize=(12,8), dpi=80)
     grid_size = (4, 4)
@@ -202,15 +223,15 @@ def plots(eul_time, eul_x, eul_b, sci_time, sci_x, sci_b, gain):
     plt.close()
 
 
-def save_as_hexy_file(stepsize, membrane, bias, gain):
-    neuron = 1 / (1 + np.exp(gain * (bias - membrane)))
-
-    # time_concat = np.concatenate(([time], [np.diff(time, axis=0, prepend=0)]))
-    time_concat = np.concatenate(([[int(i) for i in range(len(stepsize))]], [stepsize * 1000]))
-    # first_concat = np.concatenate((time_concat, neuron))
-    first_concat = np.concatenate((time_concat, bias * 1000))
-    second_concat = np.concatenate((first_concat, membrane * 1000))
-
-    filename = 'test_data_file.csv'
-    np.savetxt(os.path.join(ospath, '../data/' + filename), np.column_stack(second_concat),
-               delimiter=',', fmt='%i', header=',0,1,2,3,4,5,6,7,8,9,10,11,12', comments='')
+# def save_as_hexy_file(stepsize, membrane, bias, gain):
+#     neuron = 1 / (1 + np.exp(gain * (bias - membrane)))
+#
+#     # time_concat = np.concatenate(([time], [np.diff(time, axis=0, prepend=0)]))
+#     time_concat = np.concatenate(([[i for i in range(len(membrane[0]))]], [stepsize * 1000 for i in range(len(membrane[0]))]))
+#     # first_concat = np.concatenate((time_concat, neuron))
+#     first_concat = np.concatenate((time_concat, bias * 1000))
+#     second_concat = np.concatenate((first_concat, membrane * 1000))
+#
+#     filename = 'test_data_file.csv'
+#     np.savetxt(os.path.join(ospath, '../data/' + filename), np.column_stack(second_concat),
+#                delimiter=',', fmt='%i', header=',0,1,2,3,4,5,6,7,8,9,10,11,12', comments='')
